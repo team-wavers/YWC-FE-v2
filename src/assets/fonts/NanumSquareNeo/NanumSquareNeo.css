@@ -1,0 +1,39 @@
+@font-face {
+    font-family: "NanumSquareNeo";
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+    src: url("./NanumSquareNeoTTF-aLt.woff") format("woff");
+}
+
+@font-face {
+    font-family: "NanumSquareNeo";
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+    src: url("./NanumSquareNeoTTF-bRg.woff") format("woff");
+}
+
+@font-face {
+    font-family: "NanumSquareNeo";
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    src: url("./NanumSquareNeoTTF-cBd.woff") format("woff");
+}
+
+@font-face {
+    font-family: "NanumSquareNeo";
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url("./NanumSquareNeoTTF-dEb.woff") format("woff");
+}
+
+@font-face {
+    font-family: "NanumSquareNeo";
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+    src: url("./NanumSquareNeoTTF-eHv.woff") format("woff");
+}
