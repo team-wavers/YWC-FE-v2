@@ -1,0 +1,114 @@
+div.information {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    width: 250px;
+    min-height: 40px;
+    max-height: 300px;
+    margin: 0 auto;
+    padding: 15px;
+    text-align: center;
+    background: #fff;
+    box-shadow: 0px 3px 10px -2px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    transform: translate(calc(-50% + 12px), calc(-100% - 10px));
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+div.information::-webkit-scrollbar {
+    display: none;
+}
+
+div.information:after {
+    content: "";
+    position: absolute;
+    box-shadow: 0px 3px 10px -2px rgba(0, 0, 0, 0.2);
+    transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    bottom: -5px;
+    left: calc(50% - 6px);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent #fff #fff transparent;
+}
+
+div.information > h1.voucher-name {
+    width: 80%;
+    text-align: left;
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+    color: #222;
+}
+
+div.information > span.voucher-category {
+    font-size: 1.2rem;
+    color: #aaa;
+    padding-bottom: 12px;
+}
+
+div.information > span.voucher-phone {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 5px;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    color: #222;
+}
+
+div.information > span.voucher-address {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 5px;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    color: #222;
+    text-align: left;
+}
+
+div.information > button.close-btn {
+    position: absolute;
+    width: 10px;
+    right: 20px;
+    top: 12px;
+    background: transparent;
+    outline: none;
+    border: none;
+}
+
+div.information > button.close-btn:after {
+    content: "✕";
+    color: #222;
+}
+
+div.information > ul.voucher-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+    height: auto;
+}
+
+div.information > ul.voucher-list > li.voucher {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 90%;
+    height: 20px;
+    line-height: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    text-align: left;
+    color: #222;
+}

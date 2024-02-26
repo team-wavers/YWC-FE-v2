@@ -9,17 +9,22 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@tanstack/react-query": "^5.24.1",
 		"axios": "^1.6.7",
+		"ldrs": "^1.0.1",
 		"next": "14.1.0",
 		"react": "^18",
 		"react-dom": "^18",
 		"styled-components": "^6.1.8"
 	},
 	"devDependencies": {
+		"@svgr/webpack": "^8.1.0",
+		"@types/navermaps": "^3.7.4",
 		"@types/node": "^20",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
 		"@types/styled-components": "^5.1.34",
+		"@types/uuid": "^9.0.8",
 		"@typescript-eslint/eslint-plugin": "^7.0.2",
 		"@typescript-eslint/parser": "^7.0.2",
 		"eslint": "^8",
