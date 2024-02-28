@@ -1,5 +1,5 @@
 import React, { SyntheticEvent, useEffect, useRef, useState } from "react";
-import { Components } from "./Main.components";
+import { Components } from "@/components/domain/Main/Main.components";
 import { NaverMap } from "@/types/navermap";
 import Script from "next/script";
 import { voucher } from "@/apis/voucher";
