@@ -47,7 +47,7 @@ export default class MyDocument extends Document {
                         content="전남청년 문화복지카드 가맹점 검색 서비스"
                     />
                     <meta content="#f1f2f4" name="theme-color" />
-                    <meta content="https://youthwelfare.kr" property="og:url" />
+                    <meta content="https://ywc.wavers.kr" property="og:url" />
                     <meta content="website" property="og:type" />
                     <meta
                         content="문화복지카드 가맹점을 쉽게 검색해보세요!"
