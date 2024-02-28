@@ -26,7 +26,7 @@ export default withSentryConfig(
 
         // Suppresses source map uploading logs during build
         silent: true,
-        org: "team-culfare",
+        org: "wavers",
         project: "youth-welfare-v2",
     },
     {
