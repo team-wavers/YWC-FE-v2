@@ -119,6 +119,15 @@ const index = () => {
     // 컴포넌트 마운트 시 현재 사용자 위치 가져옴
     useEffect(() => {
         setLoading(true);
+
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty("--vh", `${vh}px`);
+
+        window.addEventListener("resize", () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty("--vh", `${vh}px`);
+        });
+
         if (window.navigator.geolocation) {
             window.navigator.geolocation.getCurrentPosition(
                 (c) => {
@@ -238,6 +247,7 @@ const index = () => {
                     "click",
                     () => {
                         setOverlapPlaces(null);
+                        setIsCenterChanged(false);
                         markers &&
                             setSelected(
                                 markers?.filter((v) => String(v._id) === id)[0],
@@ -352,7 +362,9 @@ const index = () => {
                                 }
                                 onClose={() => setExpanded(false)}
                                 observerRef={
-                                    data && data.pages[0].result.length > 1 ? (
+                                    data &&
+                                    data.pages[0].result.length > 1 &&
+                                    hasNextPage ? (
                                         <div
                                             ref={ioRef}
                                             style={{
