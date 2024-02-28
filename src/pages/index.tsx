@@ -247,7 +247,6 @@ const index = () => {
                     "click",
                     () => {
                         setOverlapPlaces(null);
-                        setIsCenterChanged(false);
                         markers &&
                             setSelected(
                                 markers?.filter((v) => String(v._id) === id)[0],
@@ -425,7 +424,6 @@ const index = () => {
                                     mapRef={mapRef.current || null}
                                     count={marker.length}
                                     onClick={() => {
-                                        setIsCenterChanged(false);
                                         setOverlapPlaces(marker);
                                         setSelected(null);
                                     }}
