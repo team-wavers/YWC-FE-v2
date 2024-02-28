@@ -22,7 +22,7 @@ export const Components = {
             align-items: center;
             justify-content: center;
             gap: 12px;
-            width: auto;
+            width: min(500px, calc(100% - 20px));
             height: auto;
             margin-bottom: 40px;
             padding: 30px 40px;
@@ -44,17 +44,17 @@ export const Components = {
         RefreshButtonContainer: styled.div`
             position: fixed;
             bottom: 0;
-            right: 20px;
+            left: 20px;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: flex-end;
             height: auto;
             padding: 20px;
-            z-index: 999;
+            z-index: 99;
             @media screen and (max-width: 767px) {
                 width: 100%;
-                right: 0;
+                left: 0;
                 bottom: 20px;
                 align-items: center;
                 justify-content: center;
@@ -74,9 +74,29 @@ export const Components = {
             font-size: 2rem;
             color: ${({ theme }) => theme.white};
             background-color: ${({ theme }) => theme.primary};
-
+            box-shadow: 0px 3px 15px -2px rgba(0, 0, 0, 0.1);
             & svg path {
                 fill: ${({ theme }) => theme.white};
+            }
+        `,
+        CurrentLocationButton: styled.button`
+            position: fixed;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            right: 20px;
+            bottom: 20px;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            background-color: ${({ theme }) => theme.white};
+            box-shadow: 0px 3px 15px -2px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            & svg path {
+                fill: ${({ theme }) => theme.black};
             }
         `,
     },

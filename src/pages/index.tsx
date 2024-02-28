@@ -6,11 +6,11 @@ import { voucher } from "@/apis/voucher";
 import Marker from "@/components/domain/Main/Marker";
 import SearchBox from "@/components/domain/Main/SearchBox";
 import RefreshIcon from "@/assets/icons/refresh-icon.svg";
+import LocationIcon from "@/assets/icons/location-icon.svg";
 import { getOverlapMarkers } from "@/utils/overlap-markers";
 import { createOverlay } from "@/utils/Overlay";
 import SearchResult from "@/components/domain/Main/SearchResult";
 import useObserver from "@/hooks/useObserver";
-import dynamic from "next/dynamic";
 import DotPulseLoader from "@/components/common/DotPulseLoader";
 import { useVoucherInfQuery } from "@/hooks/queries/infquery/useVoucherList";
 
@@ -36,7 +36,9 @@ const index = () => {
     const ioRef = useRef<HTMLDivElement | null>(null);
     const { data, status, fetchNextPage, hasNextPage, refetch } =
         useVoucherInfQuery(searchKeyword);
-    const [observe, unobserve] = useObserver(fetchNextPage);
+    const [observe, unobserve] = useObserver(
+        () => setTimeout(fetchNextPage, 300), //debounce
+    );
 
     // 맵 초기화
     const initializeMap = () => {
@@ -44,6 +46,7 @@ const index = () => {
         if (init && !loading) {
             const mapOptions = {
                 center: new window.naver.maps.LatLng(init.lat, init.lng),
+                zoom: 16,
             };
 
             const map = new window.naver.maps.Map("map", mapOptions);
@@ -79,6 +82,7 @@ const index = () => {
             client: coords.temp,
         });
         setIsCenterChanged(false);
+        setSelected(null);
     };
 
     const searchHandler = (e: SyntheticEvent<HTMLFormElement>) => {
@@ -90,6 +94,21 @@ const index = () => {
             if (value !== searchKeyword) {
                 setSearchKeyword(value);
             }
+        }
+    };
+
+    const panToCenter = () => {
+        const zoom = 16;
+        if (coords.init) {
+            setCoords({
+                ...coords,
+                client: coords.init,
+            });
+            mapRef.current?.morph(
+                new naver.maps.LatLng(coords.init.lat, coords.init.lng),
+                zoom,
+                { easing: "easeInCubic" },
+            );
         }
     };
 
@@ -131,7 +150,7 @@ const index = () => {
         if (selected && mapRef.current) {
             const Overlay = createOverlay(`<div class="information">
                 <button id="close-btn" class="close-btn"></button>
-                <h1 class="voucher-name">${selected.name}</h1>
+                <span class="voucher-name">${selected.name}</span>
                 <span class="voucher-category">${selected.category}</span>
                 <span class="voucher-phone">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="#222" d="M20 22.621l-3.521-6.795c-.008.004-1.974.97-2.064 1.011-2.24 1.086-6.799-7.82-4.609-8.994l2.083-1.026-3.493-6.817-2.106 1.039c-7.202 3.755 4.233 25.982 11.6 22.615.121-.055 2.102-1.029 2.11-1.033z"/></svg>
@@ -141,7 +160,8 @@ const index = () => {
                     <svg style="flex-shrink: 0;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="#222" d="M12 0c-4.198 0-8 3.403-8 7.602 0 4.198 3.469 9.21 8 16.398 4.531-7.188 8-12.2 8-16.398 0-4.199-3.801-7.602-8-7.602zm0 11c-1.657 0-3-1.343-3-3s1.343-3 3-3 3 1.343 3 3-1.343 3-3 3z"/></svg>
                     ${selected.address}
                 </span>
-            </div>`);
+            </div>
+            <span class="tail"></span>`);
 
             const info = new Overlay({
                 position: new window.naver.maps.LatLng(
@@ -200,7 +220,8 @@ const index = () => {
                             })
                             .join("")}
                     </ul>
-                </div>`,
+                </div>
+                <span class="tail"></span>`,
             );
 
             const places = new Overlay({
@@ -297,6 +318,11 @@ const index = () => {
         }
     }, [status]);
 
+    useEffect(() => {
+        if (ioRef.current)
+            expanded ? observe(ioRef.current) : unobserve(ioRef.current);
+    }, [expanded]);
+
     if (loading) {
         return (
             <Components.Loader.Container>
@@ -348,6 +374,7 @@ const index = () => {
                                             lng: voucher.longitude,
                                         },
                                     });
+                                    setIsCenterChanged(false);
                                 }}
                             />
                         </>
@@ -407,6 +434,11 @@ const index = () => {
                             </Components.Map.RefreshButton>
                         </Components.Map.RefreshButtonContainer>
                     )}
+                    <Components.Map.CurrentLocationButton
+                        onClick={() => panToCenter()}
+                    >
+                        <LocationIcon width={24} />
+                    </Components.Map.CurrentLocationButton>
                 </Components.Map.Container>
             </>
         );

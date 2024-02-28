@@ -17,6 +17,7 @@ const Marker = ({ mapRef, position, title, count, onClick }: Props) => {
             content: count
                 ? `<div style="position: relative; width: auto; height: auto; z-index: 99;"><img src="/assets/icons/marker-icon.svg" /><div style="display: flex; align-items: center; justify-content: center; position: absolute; top: -5px; right: 0; width:15px; height:15px; border-radius: 30px; background-color: rgb(201,78,63); color: white; font-size: 1rem; font-weight: 900;">${count}</div></div>`
                 : `<img src="/assets/icons/marker-icon.svg"/>`,
+            anchor: new naver.maps.Point(12, 24),
         };
 
         if (mapRef) {

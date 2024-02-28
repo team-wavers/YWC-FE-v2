@@ -4,7 +4,6 @@ import { highlightKeyword } from "@/utils/text-highlight";
 
 type Props = {
     keyword: string;
-    // vouchers: IVoucher[];
     data: {
         currentPage: number;
         maxPage: number;
@@ -26,39 +25,72 @@ const SearchResult = ({
     return (
         <Container>
             <CloseButton onClick={onClose} />
-
-            {data &&
-                data.map(({ result }: { result: IVoucher[] }) =>
-                    result.map((voucher: IVoucher) => {
-                        return (
-                            <VoucherItem
-                                onClick={() => onClick(voucher)}
-                                key={voucher._id}
-                            >
-                                <VoucherName>
-                                    {highlightKeyword(voucher.name, keyword)}
-                                </VoucherName>
-                                <VoucherAddress>
-                                    {voucher.address}
-                                </VoucherAddress>
-                            </VoucherItem>
-                        );
-                    }),
-                )}
-            {data.length <= 0 && <>검색 결과가 없습니다. :(</>}
-            {observerRef}
+            <VoucherListContainer>
+                {data &&
+                    data.map(({ result }: { result: IVoucher[] }) =>
+                        result.map((voucher: IVoucher) => {
+                            return (
+                                <VoucherItem
+                                    onClick={() =>
+                                        voucher.latitude && voucher.longitude
+                                            ? onClick(voucher)
+                                            : undefined
+                                    }
+                                    key={voucher._id}
+                                    style={{
+                                        cursor:
+                                            !voucher.latitude ||
+                                            !voucher.longitude
+                                                ? "not-allowed"
+                                                : undefined,
+                                    }}
+                                >
+                                    <VoucherName>
+                                        {voucher.latitude &&
+                                        voucher.longitude ? (
+                                            highlightKeyword(
+                                                voucher.name,
+                                                keyword,
+                                            )
+                                        ) : (
+                                            <span
+                                                style={{
+                                                    fontSize: "inherit",
+                                                    color: "#aaa",
+                                                }}
+                                            >
+                                                {voucher.name}
+                                            </span>
+                                        )}
+                                    </VoucherName>
+                                    <VoucherAddress>
+                                        {voucher.address || "주소 미제공"}
+                                    </VoucherAddress>
+                                </VoucherItem>
+                            );
+                        }),
+                    )}
+                {data.length <= 0 && <>검색 결과가 없습니다. :(</>}
+                {observerRef}
+            </VoucherListContainer>
         </Container>
     );
 };
 
-const Container = styled.ul`
+const Container = styled.div`
+    position: relative;
+    width: min(370px, calc(100% - 20px));
+    height: auto;
+`;
+
+const VoucherListContainer = styled.ul`
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     gap: 20px;
-    width: min(370px, calc(100% - 20px));
+    width: 100%;
     min-height: 50px;
     max-height: 500px;
     padding: 20px 0;
@@ -68,6 +100,7 @@ const Container = styled.ul`
     overflow-y: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    z-index: 99;
 `;
 
 const CloseButton = styled.button`
@@ -78,6 +111,7 @@ const CloseButton = styled.button`
     background: transparent;
     outline: none;
     border: none;
+    z-index: 999;
     &:after {
         content: "✕";
         color: #222;
@@ -91,18 +125,21 @@ const VoucherItem = styled.li`
     justify-content: center;
     gap: 8px;
     width: 100%;
-    height: 40px;
+    height: 45px;
     padding: 0 20px;
     cursor: pointer;
 `;
 
 const VoucherName = styled.span`
+    width: 90%;
     font-size: 1.3rem;
     font-weight: 500;
 `;
 
 const VoucherAddress = styled.span`
+    width: 90%;
     font-size: 1rem;
+    line-height: 1.2rem;
     font-weight: 300;
     color: #aaa;
 `;
