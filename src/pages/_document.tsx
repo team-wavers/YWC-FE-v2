@@ -35,7 +35,7 @@ export default class MyDocument extends Document {
         return (
             <Html>
                 <Head>
-                    <title>전남청년 문화복지카드 사용처 검색</title>
+                    <title>전남청년 문화복지카드 가맹점 검색</title>
                     <meta charSet="utf-8" />
                     <meta
                         name="viewport"
