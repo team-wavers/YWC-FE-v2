@@ -73,7 +73,7 @@ const SearchResult = ({
                             );
                         }),
                     )}
-                {data.length <= 0 && <>검색 결과가 없습니다. :(</>}
+                {data.length <= 0 && <NoResult>검색 결과가 없습니다.</NoResult>}
                 {observerRef}
             </VoucherListContainer>
         </Container>
@@ -144,6 +144,14 @@ const VoucherAddress = styled.span`
     line-height: 1.2rem;
     font-weight: 300;
     color: #aaa;
+`;
+
+const NoResult = styled.span`
+    width: 100%;
+    padding-left: 20px;
+    text-align: left;
+    font-size: 1.5rem;
+    color: #ccc;
 `;
 
 export default SearchResult;
