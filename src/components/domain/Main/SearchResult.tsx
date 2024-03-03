@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { highlightKeyword } from "@/utils/text-highlight";
+import CloseIcon from "@/assets/icons/close-icon.svg";
 
 type Props = {
     keyword: string;
@@ -24,7 +25,9 @@ const SearchResult = ({
 }: Props) => {
     return (
         <Container>
-            <CloseButton onClick={onClose} />
+            <CloseButton onClick={onClose}>
+                <CloseIcon />
+            </CloseButton>
             <VoucherListContainer>
                 {data &&
                     data.map(({ result }: { result: IVoucher[] }) =>
@@ -105,16 +108,15 @@ const VoucherListContainer = styled.ul`
 
 const CloseButton = styled.button`
     position: absolute;
-    width: 10px;
-    right: 20px;
-    top: 12px;
+    width: auto;
+    right: 5px;
+    top: 10px;
     background: transparent;
     outline: none;
     border: none;
     z-index: 999;
-    &:after {
-        content: "✕";
-        color: #222;
+    & svg path {
+        fill: ${({ theme }) => theme.black};
     }
 `;
 

@@ -20,6 +20,7 @@ const apiKey = process.env.NEXT_PUBLIC_NAVER_MAP_APIKEY;
 const index = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<number | null>(null);
+    const [mount, setMount] = useState<boolean>(false);
     const [coords, setCoords] = useState<{
         init: ICoord | null;
         temp: ICoord | null;
@@ -57,6 +58,8 @@ const index = () => {
             // 이벤트 최적화를 위한 center_changed 변경 -> touchend 및 mouseup event 사용
             mapRef.current.addListener("touchend", coordChangeHandler);
             mapRef.current.addListener("mouseup", coordChangeHandler);
+
+            setMount(true);
         }
     };
 
@@ -111,6 +114,7 @@ const index = () => {
                 zoom,
                 { easing: "easeInCubic" },
             );
+            setIsCenterChanged(false);
         }
     };
 
@@ -163,7 +167,7 @@ const index = () => {
     useEffect(() => {
         if (selected && mapRef.current) {
             const Overlay = createOverlay(`<div class="information">
-                <button id="close-btn" class="close-btn"></button>
+                <button id="close-btn" class="close-btn"><svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12 10.93 5.719-5.72c.146-.146.339-.219.531-.219.404 0 .75.324.75.749 0 .193-.073.385-.219.532l-5.72 5.719 5.719 5.719c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.385-.073-.531-.219l-5.719-5.719-5.719 5.719c-.146.146-.339.219-.531.219-.401 0-.75-.323-.75-.75 0-.192.073-.384.22-.531l5.719-5.719-5.72-5.719c-.146-.147-.219-.339-.219-.532 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"/></svg></button>
                 <span class="voucher-name">${selected.name}</span>
                 <span class="voucher-category">${selected.category}</span>
                 <span class="voucher-phone">
@@ -366,51 +370,54 @@ const index = () => {
                     onReady={initializeMap}
                 />
 
-                <Components.Search.Container>
-                    <SearchBox onSubmit={searchHandler} />
-                    {expanded && searchKeyword && data && (
-                        <>
-                            <SearchResult
-                                keyword={searchKeyword}
-                                data={
-                                    data.pages[0].result.length > 0
-                                        ? data.pages
-                                        : []
-                                }
-                                onClose={() => setExpanded(false)}
-                                observerRef={
-                                    data &&
-                                    data.pages[0].result.length > 1 &&
-                                    hasNextPage ? (
-                                        <div
-                                            ref={ioRef}
-                                            style={{
-                                                width: "100%",
-                                                height: "10px",
-                                            }}
-                                        />
-                                    ) : (
-                                        <></>
-                                    )
-                                }
-                                onClick={(voucher: IVoucher) => {
-                                    setExpanded(false);
-                                    setSelected(voucher);
-                                    setCoords({
-                                        ...coords,
-                                        client: {
-                                            lat: voucher.latitude,
-                                            lng: voucher.longitude,
-                                        },
-                                    });
-                                    setIsCenterChanged(false);
-                                }}
-                            />
-                        </>
-                    )}
-                </Components.Search.Container>
+                {mount && (
+                    <Components.Search.Container>
+                        <SearchBox onSubmit={searchHandler} />
+                        {expanded && searchKeyword && data && (
+                            <>
+                                <SearchResult
+                                    keyword={searchKeyword}
+                                    data={
+                                        data.pages[0].result.length > 0
+                                            ? data.pages
+                                            : []
+                                    }
+                                    onClose={() => setExpanded(false)}
+                                    observerRef={
+                                        data &&
+                                        data.pages[0].result.length > 1 &&
+                                        hasNextPage ? (
+                                            <div
+                                                ref={ioRef}
+                                                style={{
+                                                    width: "100%",
+                                                    height: "10px",
+                                                }}
+                                            />
+                                        ) : (
+                                            <></>
+                                        )
+                                    }
+                                    onClick={(voucher: IVoucher) => {
+                                        setExpanded(false);
+                                        setSelected(voucher);
+                                        setCoords({
+                                            ...coords,
+                                            client: {
+                                                lat: voucher.latitude,
+                                                lng: voucher.longitude,
+                                            },
+                                        });
+                                        setIsCenterChanged(false);
+                                    }}
+                                />
+                            </>
+                        )}
+                    </Components.Search.Container>
+                )}
                 <Components.Map.Container id="map">
-                    {mapRef &&
+                    {mount &&
+                        mapRef &&
                         markers
                             ?.filter(
                                 (vouchers) =>
@@ -433,7 +440,8 @@ const index = () => {
                                     />
                                 );
                             })}
-                    {mapRef &&
+                    {mount &&
+                        mapRef &&
                         overlapMarkers &&
                         overlapMarkers.map((marker) => {
                             return (
@@ -452,7 +460,7 @@ const index = () => {
                                 />
                             );
                         })}
-                    {isCenterChanged && (
+                    {mount && isCenterChanged && (
                         <Components.Map.RefreshButtonContainer>
                             <Components.Map.RefreshButton
                                 onClick={refreshHandler}
