@@ -94,7 +94,7 @@ const index = () => {
         e.preventDefault();
 
         const { value } = e.currentTarget[0] as HTMLInputElement;
-        if (value) {
+        if (value && value.length >= 2) {
             setExpanded(true);
             if (value !== searchKeyword) {
                 setSearchKeyword(value);
