@@ -1,6 +1,32 @@
 import styled from "styled-components";
 
 export const Components = {
+    Error: {
+        Container: styled.div`
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            height: 100vh;
+            background-color: ${({ theme }) => theme.white};
+            & svg path {
+                fill: ${({ theme }) => theme.black};
+            }
+        `,
+        Title: styled.h1`
+            font-size: 2rem;
+            font-weight: 500;
+            color: ${({ theme }) => theme.black};
+            margin: 10px 0;
+        `,
+        ErorrMessage: styled.span`
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: ${({ theme }) => theme.black};
+        `,
+    },
     Loader: {
         Container: styled.div`
             display: flex;
