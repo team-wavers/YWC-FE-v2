@@ -83,9 +83,13 @@ export const Components = {
             @media screen and (max-width: 767px) {
                 width: 100%;
                 left: 0;
-                bottom: 20px;
                 align-items: center;
                 justify-content: center;
+                background: linear-gradient(
+                    0deg,
+                    rgb(100 134 156) 0%,
+                    rgba(255, 255, 255, 0) 100%
+                );
             }
         `,
         RefreshButton: styled.button`
@@ -94,17 +98,21 @@ export const Components = {
             align-items: center;
             justify-content: center;
             gap: 10px;
-            width: 200px;
-            height: 60px;
+            width: 160px;
+            height: 45px;
+            padding: 10px;
             border: none;
-            border-radius: 20px;
+            border-radius: 16px;
             outline: none;
-            font-size: 2rem;
-            color: ${({ theme }) => theme.white};
-            background-color: ${({ theme }) => theme.primary};
-            box-shadow: 0px 3px 15px -2px rgba(0, 0, 0, 0.1);
+            font-size: 1.3rem;
+            color: #fff;
+            background-color: #3498db;
+            box-shadow:
+                0px 5px 0px 0px rgb(42 109 153),
+                0px 10px 12px 0px rgb(42 109 153 / 50%),
+                0px 6px 20px 2px rgb(42 109 153 / 10%);
             & svg path {
-                fill: ${({ theme }) => theme.white};
+                fill: #fff;
             }
         `,
         CurrentLocationButton: styled.button`
