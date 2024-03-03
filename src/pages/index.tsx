@@ -7,6 +7,7 @@ import Marker from "@/components/domain/Main/Marker";
 import SearchBox from "@/components/domain/Main/SearchBox";
 import RefreshIcon from "@/assets/icons/refresh-icon.svg";
 import LocationIcon from "@/assets/icons/location-icon.svg";
+import ErrorIcon from "@/assets/icons/error-icon.svg";
 import { getOverlapMarkers } from "@/utils/overlap-markers";
 import { createOverlay } from "@/utils/Overlay";
 import SearchResult from "@/components/domain/Main/SearchResult";
@@ -18,6 +19,7 @@ const apiKey = process.env.NEXT_PUBLIC_NAVER_MAP_APIKEY;
 
 const index = () => {
     const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<number | null>(null);
     const [coords, setCoords] = useState<{
         init: ICoord | null;
         temp: ICoord | null;
@@ -144,8 +146,11 @@ const index = () => {
                     });
                     setLoading(false);
                 },
-                () => {
-                    console.error("An error occured. Check the console log.");
+                (e: GeolocationPositionError) => {
+                    setError(e.code);
+                    console.error(
+                        `An error occured while retrieving coordinates.: ${e.message}`,
+                    );
                 },
             );
         }
@@ -332,7 +337,20 @@ const index = () => {
             expanded ? observe(ioRef.current) : unobserve(ioRef.current);
     }, [expanded]);
 
-    if (loading) {
+    if (error === 1) {
+        return (
+            <Components.Error.Container>
+                <ErrorIcon width={48} />
+                <Components.Error.Title>
+                    에러가 발생했습니다.
+                </Components.Error.Title>
+                <Components.Error.ErorrMessage>
+                    위치 수집 권한이 없습니다.
+                </Components.Error.ErorrMessage>
+            </Components.Error.Container>
+        );
+    }
+    if (loading && error === null) {
         return (
             <Components.Loader.Container>
                 <DotPulseLoader color="#3498db" />
