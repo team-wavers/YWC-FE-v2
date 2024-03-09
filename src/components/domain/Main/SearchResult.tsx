@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { highlightKeyword } from "@/utils/text-highlight";
 import CloseIcon from "@/assets/icons/close-icon.svg";
@@ -23,12 +23,18 @@ const SearchResult = ({
     onClose,
     observerRef,
 }: Props) => {
+    const listRef = useRef<HTMLUListElement | null>(null);
+
+    useEffect(() => {
+        if (listRef.current) listRef.current.scrollTo(0, 0);
+    }, [keyword]);
+
     return (
         <Container>
             <CloseButton onClick={onClose}>
                 <CloseIcon />
             </CloseButton>
-            <VoucherListContainer>
+            <VoucherListContainer ref={listRef}>
                 {data &&
                     data.map(({ result }: { result: IVoucher[] }) =>
                         result.map((voucher: IVoucher) => {

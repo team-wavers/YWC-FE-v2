@@ -1,12 +1,11 @@
 import { voucher } from "@/apis/voucher";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
-import { v4 } from "uuid";
 
 export const useVoucherInfQuery = (q: string) => {
     const { data, status, fetchNextPage, hasNextPage, refetch } =
         useInfiniteQuery({
-            queryKey: ["ywc.voucherlist.infQuery", q, v4],
+            queryKey: ["ywc.voucherlist.infQuery", q],
             queryFn: async ({ pageParam }) => {
                 const response: AxiosResponse<GeneralResponse<IVoucher[]>> =
                     await voucher.getVouchersByKeyword({
@@ -29,8 +28,6 @@ export const useVoucherInfQuery = (q: string) => {
                     : lastPage.nextPage;
             },
             enabled: false,
-            staleTime: Infinity,
-            gcTime: 0,
         });
 
     return { data, status, fetchNextPage, hasNextPage, refetch };
