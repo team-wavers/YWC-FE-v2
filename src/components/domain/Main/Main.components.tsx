@@ -21,7 +21,7 @@ export const Components = {
             color: ${({ theme }) => theme.black};
             margin: 10px 0;
         `,
-        ErorrMessage: styled.span`
+        ErrorMessage: styled.span`
             font-size: 1.5rem;
             font-weight: 300;
             color: ${({ theme }) => theme.black};
@@ -87,7 +87,7 @@ export const Components = {
                 justify-content: center;
                 background: linear-gradient(
                     0deg,
-                    rgb(100 134 156) 0%,
+                    rgb(100 134 156 / 70%) 0%,
                     rgba(255, 255, 255, 0) 100%
                 );
             }
@@ -107,10 +107,7 @@ export const Components = {
             font-size: 1.3rem;
             color: #fff;
             background-color: #3498db;
-            box-shadow:
-                0px 5px 0px 0px rgb(42 109 153),
-                0px 10px 12px 0px rgb(42 109 153 / 50%),
-                0px 6px 20px 2px rgb(42 109 153 / 10%);
+            box-shadow: 0px 10px 20px 1px rgb(42 109 153 / 75%);
             & svg path {
                 fill: #fff;
             }

@@ -341,9 +341,9 @@ const index = () => {
                 <Components.Error.Title>
                     에러가 발생했습니다.
                 </Components.Error.Title>
-                <Components.Error.ErorrMessage>
+                <Components.Error.ErrorMessage>
                     위치 수집 권한이 없습니다.
-                </Components.Error.ErorrMessage>
+                </Components.Error.ErrorMessage>
             </Components.Error.Container>
         );
     }
