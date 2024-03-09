@@ -97,10 +97,13 @@ const index = () => {
 
         const { value } = e.currentTarget[0] as HTMLInputElement;
         if (value && value.length >= 2) {
+            if (value === "개발자들") {
+                router.push(process.env.NEXT_PUBLIC_SERVICE_DOCUMENT_URL || "");
+                return;
+            }
+
             setExpanded(true);
             if (value !== searchKeyword) setSearchKeyword(value);
-            if (value === "개발자들")
-                router.push(process.env.NEXT_PUBLIC_SERVICE_DOCUMENT_URL || "");
         }
     };
 
