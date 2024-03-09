@@ -14,6 +14,7 @@ import SearchResult from "@/components/domain/Main/SearchResult";
 import useObserver from "@/hooks/useObserver";
 import DotPulseLoader from "@/components/common/DotPulseLoader";
 import { useVoucherInfQuery } from "@/hooks/queries/infquery/useVoucherList";
+import { useRouter } from "next/router";
 
 const apiKey = process.env.NEXT_PUBLIC_NAVER_MAP_APIKEY;
 
@@ -37,6 +38,7 @@ const index = () => {
     const [expanded, setExpanded] = useState<boolean>(false);
     const mapRef = useRef<NaverMap | null>(null);
     const ioRef = useRef<HTMLDivElement | null>(null);
+    const router = useRouter();
     const { data, status, fetchNextPage, hasNextPage, refetch } =
         useVoucherInfQuery(searchKeyword);
     const [observe, unobserve] = useObserver(
@@ -96,9 +98,9 @@ const index = () => {
         const { value } = e.currentTarget[0] as HTMLInputElement;
         if (value && value.length >= 2) {
             setExpanded(true);
-            if (value !== searchKeyword) {
-                setSearchKeyword(value);
-            }
+            if (value !== searchKeyword) setSearchKeyword(value);
+            if (value === "개발자들")
+                router.push(process.env.NEXT_PUBLIC_SERVICE_DOCUMENT_URL || "");
         }
     };
 
