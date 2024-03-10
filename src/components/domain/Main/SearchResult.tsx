@@ -1,18 +1,25 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { highlightKeyword } from "@/utils/text-highlight";
+import CloseIcon from "@/assets/icons/close-icon.svg";
+import ArrowDownIcon from "@/assets/icons/arrow-down-icon.svg";
+import DotPulseLoader from "@/components/common/DotPulseLoader";
 
 type Props = {
     keyword: string;
-    data: {
-        currentPage: number;
-        maxPage: number;
-        nextPage: number;
-        result: IVoucher[];
-    }[];
+    data:
+        | {
+              currentPage: number;
+              maxPage: number;
+              nextPage: number;
+              result: IVoucher[];
+          }[]
+        | null;
     onClick: (voucher: IVoucher) => void;
     onClose: () => void;
-    observerRef: React.ReactNode;
+    hasNextPage: boolean;
+    pageHandler: () => void;
+    status: { isFetchingNextPage: boolean; isFetching: boolean };
 };
 
 const SearchResult = ({
@@ -20,13 +27,30 @@ const SearchResult = ({
     data,
     onClick,
     onClose,
-    observerRef,
+    hasNextPage,
+    pageHandler,
+    status,
 }: Props) => {
+    const listRef = useRef<HTMLUListElement | null>(null);
+    const { isFetching, isFetchingNextPage } = status;
+
+    useEffect(() => {
+        if (listRef.current) listRef.current.scrollTo(0, 0);
+    }, [keyword]);
+
     return (
         <Container>
-            <CloseButton onClick={onClose} />
-            <VoucherListContainer>
-                {data &&
+            <CloseButton onClick={onClose}>
+                <CloseIcon />
+            </CloseButton>
+
+            <VoucherListContainer ref={listRef}>
+                {isFetching && !isFetchingNextPage ? (
+                    <Item>
+                        <DotPulseLoader color="#3498db" />
+                    </Item>
+                ) : (
+                    data &&
                     data.map(({ result }: { result: IVoucher[] }) =>
                         result.map((voucher: IVoucher) => {
                             return (
@@ -69,9 +93,24 @@ const SearchResult = ({
                                 </VoucherItem>
                             );
                         }),
-                    )}
-                {data.length <= 0 && <>검색 결과가 없습니다. :(</>}
-                {observerRef}
+                    )
+                )}
+                {data &&
+                    data.length <= 0 &&
+                    !isFetchingNextPage &&
+                    !isFetching && <NoResult>검색 결과가 없습니다.</NoResult>}
+                {hasNextPage && !isFetching && (
+                    <Item>
+                        <ShowMoreButton onClick={pageHandler}>
+                            <ArrowDownIcon /> 더보기
+                        </ShowMoreButton>
+                    </Item>
+                )}
+                {isFetchingNextPage && (
+                    <Item>
+                        <DotPulseLoader color="#3498db" />
+                    </Item>
+                )}
             </VoucherListContainer>
         </Container>
     );
@@ -105,16 +144,15 @@ const VoucherListContainer = styled.ul`
 
 const CloseButton = styled.button`
     position: absolute;
-    width: 10px;
-    right: 20px;
-    top: 12px;
+    width: auto;
+    right: 5px;
+    top: 10px;
     background: transparent;
     outline: none;
     border: none;
     z-index: 999;
-    &:after {
-        content: "✕";
-        color: #222;
+    & svg path {
+        fill: ${({ theme }) => theme.black};
     }
 `;
 
@@ -142,6 +180,33 @@ const VoucherAddress = styled.span`
     line-height: 1.2rem;
     font-weight: 300;
     color: #aaa;
+`;
+
+const NoResult = styled.span`
+    width: 100%;
+    padding-left: 20px;
+    text-align: left;
+    font-size: 1.5rem;
+    color: #ccc;
+`;
+
+const Item = styled(VoucherItem)`
+    height: 50px;
+    align-items: center;
+`;
+
+const ShowMoreButton = styled.button`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: auto;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: ${({ theme }) => theme.black};
 `;
 
 export default SearchResult;

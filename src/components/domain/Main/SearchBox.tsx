@@ -9,7 +9,7 @@ type Props = {
 const SearchBox = ({ onSubmit }: Props) => {
     return (
         <FormContainer onSubmit={onSubmit}>
-            <Input placeholder="검색어를 입력하세요." />
+            <Input placeholder="검색어를 입력하세요. (ex: 순천)" />
             <Button type="submit">
                 <MagnifierIcon fill={"#fff"} />
             </Button>

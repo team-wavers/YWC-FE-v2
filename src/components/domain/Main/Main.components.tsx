@@ -1,6 +1,39 @@
 import styled from "styled-components";
 
 export const Components = {
+    Error: {
+        Container: styled.div`
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            height: 100vh;
+            background-color: ${({ theme }) => theme.white};
+            & svg path {
+                fill: ${({ theme }) => theme.black};
+            }
+        `,
+        Title: styled.h1`
+            font-size: 2rem;
+            font-weight: 500;
+            color: ${({ theme }) => theme.black};
+            margin: 10px 0;
+        `,
+        ErrorMessage: styled.span`
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: ${({ theme }) => theme.black};
+            &.link {
+                color: #ccc;
+                margin-top: 20px;
+                &:hover {
+                    color: ${({ theme }) => theme.primary};
+                }
+            }
+        `,
+    },
     Loader: {
         Container: styled.div`
             display: flex;
@@ -38,7 +71,7 @@ export const Components = {
     Map: {
         Container: styled.div`
             width: 100%;
-            height: 100%;
+            height: 100vh;
             background-color: black;
         `,
         RefreshButtonContainer: styled.div`
@@ -55,9 +88,13 @@ export const Components = {
             @media screen and (max-width: 767px) {
                 width: 100%;
                 left: 0;
-                bottom: 20px;
                 align-items: center;
                 justify-content: center;
+                background: linear-gradient(
+                    0deg,
+                    rgb(100 134 156 / 70%) 0%,
+                    rgba(255, 255, 255, 0) 100%
+                );
             }
         `,
         RefreshButton: styled.button`
@@ -66,17 +103,18 @@ export const Components = {
             align-items: center;
             justify-content: center;
             gap: 10px;
-            width: 200px;
-            height: 60px;
+            width: 160px;
+            height: 45px;
+            padding: 10px;
             border: none;
-            border-radius: 20px;
+            border-radius: 16px;
             outline: none;
-            font-size: 2rem;
-            color: ${({ theme }) => theme.white};
-            background-color: ${({ theme }) => theme.primary};
-            box-shadow: 0px 3px 15px -2px rgba(0, 0, 0, 0.1);
+            font-size: 1.3rem;
+            color: #fff;
+            background-color: #3498db;
+            box-shadow: 0px 10px 20px 1px rgb(42 109 153 / 75%);
             & svg path {
-                fill: ${({ theme }) => theme.white};
+                fill: #fff;
             }
         `,
         CurrentLocationButton: styled.button`

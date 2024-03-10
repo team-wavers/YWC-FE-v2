@@ -1,6 +1,7 @@
 /* eslint-disable */
+import React from "react";
 
-function createOverlay(element) {
+function createOverlay(element, event) {
     var Overlay = function (options) {
         this._element = document.createElement("div");
         this.setPosition(options.position);
@@ -35,6 +36,8 @@ function createOverlay(element) {
             pixelPos = prj.fromCoordToOffset(pos);
         this._element.style.cssText = `position: absolute; width:0; height: 0; transform: translate3d(${Math.ceil(pixelPos.x) - 11}px, ${Math.ceil(pixelPos.y) - 18}px, 0px); filter: drop-shadow(rgba(0,0,0,0.15) 0px 3px 6px);`;
         this._element.innerHTML = element;
+
+        event();
 
         document.getElementById("close-btn").addEventListener(
             "click",

@@ -30,10 +30,6 @@ const Marker = ({ mapRef, position, title, count, onClick }: Props) => {
             title && marker.setTitle(title);
         }
 
-        //marker?.setIcon({
-        //    content: `<div style="position: relative; width: auto; height: auto;"><img src="/assets/icons/marker-focused-icon.svg" /><div style="position: absolute; top: 0; right: 0; width:10px; height:10px; border-radius: 30px; background-color: blue;"></div></div>`,
-        //});
-
         marker &&
             onClick &&
             naver.maps.Event.addListener(marker, "click", onClick);
