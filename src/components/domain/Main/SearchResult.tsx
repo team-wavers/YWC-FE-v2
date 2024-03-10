@@ -193,6 +193,7 @@ const ShowMoreButton = styled.button`
     border: none;
     outline: none;
     background-color: transparent;
+    color: ${({ theme }) => theme.black};
 `;
 
 export default SearchResult;
