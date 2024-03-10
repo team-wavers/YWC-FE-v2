@@ -15,6 +15,7 @@ import useObserver from "@/hooks/useObserver";
 import DotPulseLoader from "@/components/common/DotPulseLoader";
 import { useVoucherInfQuery } from "@/hooks/queries/infquery/useVoucherList";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const apiKey = process.env.NEXT_PUBLIC_NAVER_MAP_APIKEY;
 
@@ -349,6 +350,17 @@ const index = () => {
                 </Components.Error.Title>
                 <Components.Error.ErrorMessage>
                     위치 수집 권한이 없습니다.
+                </Components.Error.ErrorMessage>
+                <Components.Error.ErrorMessage className="link">
+                    <Link
+                        style={{
+                            fontSize: "inherit",
+                            color: "inherit",
+                        }}
+                        href={process.env.NEXT_PUBLIC_SERVICE_FAQ_URL || ""}
+                    >
+                        문제가 발생했나요?
+                    </Link>
                 </Components.Error.ErrorMessage>
             </Components.Error.Container>
         );

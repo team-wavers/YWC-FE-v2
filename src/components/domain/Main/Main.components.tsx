@@ -25,6 +25,13 @@ export const Components = {
             font-size: 1.5rem;
             font-weight: 300;
             color: ${({ theme }) => theme.black};
+            &.link {
+                color: #ccc;
+                margin-top: 20px;
+                &:hover {
+                    color: ${({ theme }) => theme.primary};
+                }
+            }
         `,
     },
     Loader: {
