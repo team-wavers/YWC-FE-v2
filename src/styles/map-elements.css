@@ -101,6 +101,18 @@ div.information > ul.voucher-list {
     height: auto;
 }
 
+div.information > ul.voucher-list > li.count {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: 100%;
+    height: 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ccc;
+}
+
 div.information > ul.voucher-list > li.voucher {
     display: flex;
     flex-direction: column;

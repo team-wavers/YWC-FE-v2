@@ -238,6 +238,7 @@ const index = () => {
                                 );
                             })
                             .join("")}
+                        <li class="count">${overlapPlaces.length}개의 가맹점이 있습니다.</li>
                     </ul>
                 </div>
                 <span class="tail"></span>`,
