@@ -10,6 +10,8 @@ export const useVoucherInfQuery = (q: string) => {
         hasNextPage,
         refetch,
         isFetchingNextPage,
+        isRefetching,
+        isFetching,
     } = useInfiniteQuery({
         queryKey: ["ywc.voucherlist.infQuery", q],
         queryFn: async ({ pageParam }) => {
@@ -43,5 +45,7 @@ export const useVoucherInfQuery = (q: string) => {
         hasNextPage,
         refetch,
         isFetchingNextPage,
+        isRefetching,
+        isFetching,
     };
 };

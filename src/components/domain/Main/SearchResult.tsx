@@ -7,17 +7,19 @@ import DotPulseLoader from "@/components/common/DotPulseLoader";
 
 type Props = {
     keyword: string;
-    data: {
-        currentPage: number;
-        maxPage: number;
-        nextPage: number;
-        result: IVoucher[];
-    }[];
+    data:
+        | {
+              currentPage: number;
+              maxPage: number;
+              nextPage: number;
+              result: IVoucher[];
+          }[]
+        | null;
     onClick: (voucher: IVoucher) => void;
     onClose: () => void;
     hasNextPage: boolean;
     pageHandler: () => void;
-    isFetchingNextPage: boolean;
+    status: { isFetchingNextPage: boolean; isFetching: boolean };
 };
 
 const SearchResult = ({
@@ -27,9 +29,10 @@ const SearchResult = ({
     onClose,
     hasNextPage,
     pageHandler,
-    isFetchingNextPage,
+    status,
 }: Props) => {
     const listRef = useRef<HTMLUListElement | null>(null);
+    const { isFetching, isFetchingNextPage } = status;
 
     useEffect(() => {
         if (listRef.current) listRef.current.scrollTo(0, 0);
@@ -40,8 +43,14 @@ const SearchResult = ({
             <CloseButton onClick={onClose}>
                 <CloseIcon />
             </CloseButton>
+
             <VoucherListContainer ref={listRef}>
-                {data &&
+                {isFetching && !isFetchingNextPage ? (
+                    <Item>
+                        <DotPulseLoader color="#3498db" />
+                    </Item>
+                ) : (
+                    data &&
                     data.map(({ result }: { result: IVoucher[] }) =>
                         result.map((voucher: IVoucher) => {
                             return (
@@ -84,18 +93,22 @@ const SearchResult = ({
                                 </VoucherItem>
                             );
                         }),
-                    )}
-                {data.length <= 0 && <NoResult>검색 결과가 없습니다.</NoResult>}
-                {hasNextPage && (
+                    )
+                )}
+                {data &&
+                    data.length <= 0 &&
+                    !isFetchingNextPage &&
+                    !isFetching && <NoResult>검색 결과가 없습니다.</NoResult>}
+                {hasNextPage && !isFetching && (
                     <Item>
-                        {!isFetchingNextPage && (
-                            <ShowMoreButton onClick={pageHandler}>
-                                <ArrowDownIcon /> 더보기
-                            </ShowMoreButton>
-                        )}
-                        {isFetchingNextPage && (
-                            <DotPulseLoader color="#3498db" />
-                        )}
+                        <ShowMoreButton onClick={pageHandler}>
+                            <ArrowDownIcon /> 더보기
+                        </ShowMoreButton>
+                    </Item>
+                )}
+                {isFetchingNextPage && (
+                    <Item>
+                        <DotPulseLoader color="#3498db" />
                     </Item>
                 )}
             </VoucherListContainer>

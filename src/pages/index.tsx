@@ -38,8 +38,14 @@ const index = () => {
     const [expanded, setExpanded] = useState<boolean>(false);
     const mapRef = useRef<NaverMap | null>(null);
     const router = useRouter();
-    const { data, fetchNextPage, hasNextPage, refetch, isFetchingNextPage } =
-        useVoucherInfQuery(searchKeyword);
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        refetch,
+        isFetchingNextPage,
+        isFetching,
+    } = useVoucherInfQuery(searchKeyword);
 
     // 맵 초기화
     const initializeMap = () => {
@@ -122,6 +128,10 @@ const index = () => {
     useEffect(() => {
         searchKeyword && refetch();
     }, [searchKeyword]);
+
+    useEffect(() => {
+        console.log(isFetching);
+    }, [isFetching]);
 
     // 컴포넌트 마운트 시 현재 사용자 위치 가져옴
     useEffect(() => {
@@ -359,19 +369,24 @@ const index = () => {
                 {mount && (
                     <Components.Search.Container>
                         <SearchBox onSubmit={searchHandler} />
-                        {expanded && searchKeyword && data && (
+                        {expanded && searchKeyword && (
                             <>
                                 <SearchResult
                                     keyword={searchKeyword}
                                     data={
-                                        data.pages[0].result.length > 0
-                                            ? data.pages
-                                            : []
+                                        data
+                                            ? data.pages[0].result.length > 0
+                                                ? data.pages
+                                                : []
+                                            : null
                                     }
                                     onClose={() => setExpanded(false)}
                                     hasNextPage={hasNextPage}
                                     pageHandler={fetchNextPage}
-                                    isFetchingNextPage={isFetchingNextPage}
+                                    status={{
+                                        isFetchingNextPage: isFetchingNextPage,
+                                        isFetching: isFetching,
+                                    }}
                                     onClick={(voucher: IVoucher) => {
                                         setExpanded(false);
                                         setSelected(voucher);
