@@ -334,7 +334,6 @@ const index = () => {
                 ? observe(ioRef.current)
                 : unobserve(ioRef.current);
         }
-        console.log(status);
     }, [status]);
 
     useEffect(() => {
