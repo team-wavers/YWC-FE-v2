@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { highlightKeyword } from "@/utils/text-highlight";
 import CloseIcon from "@/assets/icons/close-icon.svg";
+import ArrowDownIcon from "@/assets/icons/arrow-down-icon.svg";
+import DotPulseLoader from "@/components/common/DotPulseLoader";
 
 type Props = {
     keyword: string;
@@ -13,7 +15,9 @@ type Props = {
     }[];
     onClick: (voucher: IVoucher) => void;
     onClose: () => void;
-    observerRef: React.ReactNode;
+    hasNextPage: boolean;
+    pageHandler: () => void;
+    isFetchingNextPage: boolean;
 };
 
 const SearchResult = ({
@@ -21,7 +25,9 @@ const SearchResult = ({
     data,
     onClick,
     onClose,
-    observerRef,
+    hasNextPage,
+    pageHandler,
+    isFetchingNextPage,
 }: Props) => {
     const listRef = useRef<HTMLUListElement | null>(null);
 
@@ -80,7 +86,18 @@ const SearchResult = ({
                         }),
                     )}
                 {data.length <= 0 && <NoResult>검색 결과가 없습니다.</NoResult>}
-                {observerRef}
+                {hasNextPage && (
+                    <Item>
+                        {!isFetchingNextPage && (
+                            <ShowMoreButton onClick={pageHandler}>
+                                <ArrowDownIcon /> 더보기
+                            </ShowMoreButton>
+                        )}
+                        {isFetchingNextPage && (
+                            <DotPulseLoader color="#3498db" />
+                        )}
+                    </Item>
+                )}
             </VoucherListContainer>
         </Container>
     );
@@ -158,6 +175,24 @@ const NoResult = styled.span`
     text-align: left;
     font-size: 1.5rem;
     color: #ccc;
+`;
+
+const Item = styled(VoucherItem)`
+    height: 50px;
+    align-items: center;
+`;
+
+const ShowMoreButton = styled.button`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: auto;
+    border: none;
+    outline: none;
+    background-color: transparent;
 `;
 
 export default SearchResult;

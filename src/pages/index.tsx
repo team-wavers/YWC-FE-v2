@@ -11,7 +11,6 @@ import ErrorIcon from "@/assets/icons/error-icon.svg";
 import { getOverlapMarkers } from "@/utils/overlap-markers";
 import { createOverlay } from "@/utils/Overlay";
 import SearchResult from "@/components/domain/Main/SearchResult";
-import useObserver from "@/hooks/useObserver";
 import DotPulseLoader from "@/components/common/DotPulseLoader";
 import { useVoucherInfQuery } from "@/hooks/queries/infquery/useVoucherList";
 import { useRouter } from "next/router";
@@ -38,13 +37,9 @@ const index = () => {
     const [searchKeyword, setSearchKeyword] = useState<string>("");
     const [expanded, setExpanded] = useState<boolean>(false);
     const mapRef = useRef<NaverMap | null>(null);
-    const ioRef = useRef<HTMLDivElement | null>(null);
     const router = useRouter();
-    const { data, status, fetchNextPage, hasNextPage, refetch } =
+    const { data, fetchNextPage, hasNextPage, refetch, isFetchingNextPage } =
         useVoucherInfQuery(searchKeyword);
-    const [observe, unobserve] = useObserver(
-        () => setTimeout(fetchNextPage, 300), //debounce
-    );
 
     // 맵 초기화
     const initializeMap = () => {
@@ -321,26 +316,6 @@ const index = () => {
         }
     }, [coords.client]);
 
-    // intersection observer event register
-    useEffect(() => {
-        if (ioRef.current) {
-            !hasNextPage ? unobserve(ioRef.current) : observe(ioRef.current);
-        }
-    }, [data]);
-
-    useEffect(() => {
-        if (ioRef.current) {
-            status === "success"
-                ? observe(ioRef.current)
-                : unobserve(ioRef.current);
-        }
-    }, [status]);
-
-    useEffect(() => {
-        if (ioRef.current)
-            expanded ? observe(ioRef.current) : unobserve(ioRef.current);
-    }, [expanded]);
-
     if (error === 1) {
         return (
             <Components.Error.Container>
@@ -394,21 +369,9 @@ const index = () => {
                                             : []
                                     }
                                     onClose={() => setExpanded(false)}
-                                    observerRef={
-                                        data &&
-                                        data.pages[0].result.length > 1 &&
-                                        hasNextPage ? (
-                                            <div
-                                                ref={ioRef}
-                                                style={{
-                                                    width: "100%",
-                                                    height: "10px",
-                                                }}
-                                            />
-                                        ) : (
-                                            <></>
-                                        )
-                                    }
+                                    hasNextPage={hasNextPage}
+                                    pageHandler={fetchNextPage}
+                                    isFetchingNextPage={isFetchingNextPage}
                                     onClick={(voucher: IVoucher) => {
                                         setExpanded(false);
                                         setSelected(voucher);
