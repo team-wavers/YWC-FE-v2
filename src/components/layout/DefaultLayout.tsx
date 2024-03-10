@@ -10,7 +10,7 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
             const vh = window.innerHeight * 0.01;
             document.documentElement.style.setProperty("--vh", `${vh}px`);
         });
-    }, []);
+    });
 
     return (
         <Layout.Container>

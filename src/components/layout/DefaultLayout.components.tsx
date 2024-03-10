@@ -4,7 +4,9 @@ export const Components = {
     Container: styled.div`
         width: 100%;
         height: 100vh;
+        height: calc(var(--vh, 1vh) * 100);
         margin: 0 auto;
+        overflow-y: hidden;
     `,
     Header: {
         Container: styled.header`
@@ -31,6 +33,6 @@ export const Components = {
         align-items: center;
         justify-content: flex-start;
         width: 100%;
+        height: 100vh;
     `,
-    Footer: styled.footer``,
 };
