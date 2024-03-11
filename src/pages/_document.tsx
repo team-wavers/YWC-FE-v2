@@ -5,6 +5,7 @@ import { ServerStyleSheet } from "styled-components";
 
 const gtagURL = process.env.NEXT_PUBLIC_GA_GTAG_URL;
 const gtag = process.env.NEXT_PUBLIC_GA_GTAG;
+const serviceURI = process.env.NEXT_PUBLIC_SERVICE_URI;
 export default class MyDocument extends Document {
     static async getInitialProps(
         ctx: DocumentContext,
@@ -50,7 +51,7 @@ export default class MyDocument extends Document {
                         content="전남청년 문화복지카드 가맹점 검색 서비스"
                     />
                     <meta content="#f1f2f4" name="theme-color" />
-                    <meta content="https://ywc.wavers.kr" property="og:url" />
+                    <meta content={serviceURI} property="og:url" />
                     <meta content="website" property="og:type" />
                     <meta
                         content="문화복지카드 가맹점을 쉽게 검색해보세요!"
@@ -59,18 +60,16 @@ export default class MyDocument extends Document {
                     <meta content="./thumbnail.png" property="og:image" />
                     <meta content="1200" property="og:image:width" />
                     <meta content="630" property="og:image:height" />
-                    {gtagURL && <Script async src={gtagURL}></Script>}
-                    {gtag && (
-                        <Script strategy="afterInteractive">
-                            {`window.dataLayer = window.dataLayer || [];
+                    <Script async src={gtagURL}></Script>
+                    <Script strategy="afterInteractive">
+                        {`window.dataLayer = window.dataLayer || [];
                         function gtag() {
                             dataLayer.push(arguments);
                         }
                         gtag("js", new Date());
 
                         gtag("config", "${gtag}")`}
-                        </Script>
-                    )}
+                    </Script>
                 </Head>
                 <body>
                     <Main />
