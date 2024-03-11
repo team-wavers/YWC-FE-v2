@@ -3,9 +3,8 @@ import Document, { Head, Html, Main, NextScript } from "next/document";
 import Script from "next/script";
 import { ServerStyleSheet } from "styled-components";
 
-const gtagURL = process.env.NEXT_PUBLIC_GA_GTAG_URL;
-const gtag = process.env.NEXT_PUBLIC_GA_GTAG;
 const serviceURI = process.env.NEXT_PUBLIC_SERVICE_URI;
+
 export default class MyDocument extends Document {
     static async getInitialProps(
         ctx: DocumentContext,
@@ -60,16 +59,6 @@ export default class MyDocument extends Document {
                     <meta content="./thumbnail.png" property="og:image" />
                     <meta content="1200" property="og:image:width" />
                     <meta content="630" property="og:image:height" />
-                    <Script async src={gtagURL}></Script>
-                    <Script strategy="afterInteractive">
-                        {`window.dataLayer = window.dataLayer || [];
-                        function gtag() {
-                            dataLayer.push(arguments);
-                        }
-                        gtag("js", new Date());
-
-                        gtag("config", "${gtag}")`}
-                    </Script>
                 </Head>
                 <body>
                     <Main />
