@@ -129,10 +129,6 @@ const index = () => {
         searchKeyword && refetch();
     }, [searchKeyword]);
 
-    useEffect(() => {
-        console.log(isFetching);
-    }, [isFetching]);
-
     // 컴포넌트 마운트 시 현재 사용자 위치 가져옴
     useEffect(() => {
         setLoading(true);
