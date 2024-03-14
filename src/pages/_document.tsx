@@ -1,6 +1,5 @@
 import type { DocumentContext, DocumentInitialProps } from "next/document";
 import Document, { Head, Html, Main, NextScript } from "next/document";
-import Script from "next/script";
 import { ServerStyleSheet } from "styled-components";
 
 const serviceURI = process.env.NEXT_PUBLIC_SERVICE_URI;
