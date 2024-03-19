@@ -37,14 +37,15 @@ export default function App({ Component, pageProps }: AppProps) {
             </QueryClientProvider>
             <Script async src={gtagURI}></Script>
             <Script id="gtag-script">
-                {`window.dataLayer = window.dataLayer || [];
-                        function gtag() {
-                            dataLayer.push(arguments);
-                        }
-                        gtag('js', new Date());
+                {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+                gtag('js', new Date());
 
-                        gtag('config', '${gtag}');
-                        console.log("loaded")`}
+                gtag('config', '${gtag}');
+                console.log("gtag script injected")`}
             </Script>
         </>
     );

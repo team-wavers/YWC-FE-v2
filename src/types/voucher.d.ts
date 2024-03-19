@@ -3,7 +3,7 @@ interface IVoucher {
     number: number;
     name: string;
     category: string;
-    phone: string;
+    bank: "NH" | "GJ" | "NH/GJ";
     address: string;
     created_at: string;
     updated_at: string;
