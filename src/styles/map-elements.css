@@ -49,7 +49,7 @@ div.information > span.voucher-category {
     padding-bottom: 12px;
 }
 
-div.information > span.voucher-phone {
+div.information > span.voucher-bank {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
