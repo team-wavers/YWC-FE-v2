@@ -151,7 +151,7 @@ const index = () => {
                 },
                 (e: GeolocationPositionError) => {
                     setError(e.code);
-                    console.error(
+                    throw new Error(
                         `An error occured while retrieving coordinates.: ${e.message}`,
                     );
                 },
@@ -324,7 +324,9 @@ const index = () => {
                         }
                     },
                 )
-                .catch((e) => console.log(e));
+                .catch((e) => {
+                    throw new Error(`An error occured while fetching data.`);
+                });
         }
     }, [coords.client]);
 
