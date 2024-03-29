@@ -2,6 +2,8 @@ import type { DocumentContext, DocumentInitialProps } from "next/document";
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
 
+const serviceURI = process.env.NEXT_PUBLIC_SERVICE_URI;
+
 export default class MyDocument extends Document {
     static async getInitialProps(
         ctx: DocumentContext,
@@ -47,7 +49,7 @@ export default class MyDocument extends Document {
                         content="전남청년 문화복지카드 가맹점 검색 서비스"
                     />
                     <meta content="#f1f2f4" name="theme-color" />
-                    <meta content="https://ywc.wavers.kr" property="og:url" />
+                    <meta content={serviceURI} property="og:url" />
                     <meta content="website" property="og:type" />
                     <meta
                         content="문화복지카드 가맹점을 쉽게 검색해보세요!"
