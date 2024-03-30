@@ -137,5 +137,63 @@ export const Components = {
                 fill: ${({ theme }) => theme.black};
             }
         `,
+        MenuButton: styled.button<{ $expanded: boolean }>`
+            position: fixed;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            right: 20px;
+            bottom: 80px;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            background-color: ${({ theme }) => theme.white};
+            box-shadow: 0px 3px 15px -2px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            & svg path {
+                fill: ${({ theme }) => theme.black};
+            }
+            ${({ $expanded }) => $expanded && `box-shadow: none;`}
+        `,
+        MenuContainer: styled.ul`
+            position: fixed;
+            right: 20px;
+            bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            width: 200px;
+            min-height: 30px;
+            padding: 10px 0;
+            border-radius: 20px;
+            background-color: ${({ theme }) => theme.white};
+            box-shadow: 0px 3px 15px -2px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+        `,
+        MenuItemContainer: styled.li`
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            height: 30px;
+            padding: 0px 10px;
+        `,
+        MenuItem: styled.button`
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            background-color: transparent;
+            font-size: 1.25rem;
+        `,
     },
 };
