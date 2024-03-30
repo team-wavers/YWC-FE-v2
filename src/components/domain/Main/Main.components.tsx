@@ -194,6 +194,7 @@ export const Components = {
             outline: none;
             background-color: transparent;
             font-size: 1.25rem;
+            color: ${({ theme }) => theme.black};
         `,
     },
 };
