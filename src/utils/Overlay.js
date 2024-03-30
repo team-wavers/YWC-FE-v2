@@ -43,6 +43,7 @@ function createOverlay(element, event) {
         this._element.innerHTML = element;
         this._element.addEventListener("scroll", preventEventBubbling)
         this._element.addEventListener("mousewheel", preventEventBubbling)
+        this._element.addEventListener("touchmove", preventEventBubbling);
 
         event();
 
