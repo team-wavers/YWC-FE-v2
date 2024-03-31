@@ -8,6 +8,8 @@ import SearchBox from "@/components/domain/Main/SearchBox";
 import RefreshIcon from "@/assets/icons/refresh-icon.svg";
 import LocationIcon from "@/assets/icons/location-icon.svg";
 import ErrorIcon from "@/assets/icons/error-icon.svg";
+import MenuIcon from "@/assets/icons/menu-icon.svg";
+import CloseIcon from "@/assets/icons/close-icon.svg";
 import { getOverlapMarkers } from "@/utils/overlap-markers";
 import { createOverlay } from "@/utils/Overlay";
 import SearchResult from "@/components/domain/Main/SearchResult";
@@ -36,6 +38,7 @@ const index = () => {
     const [overlapPlaces, setOverlapPlaces] = useState<IVoucher[] | null>(null); //겹치는 장소 (오버레이 표시용)
     const [searchKeyword, setSearchKeyword] = useState<string>("");
     const [expanded, setExpanded] = useState<boolean>(false);
+    const [menuExpanded, setMenuExpanded] = useState<boolean>(false);
     const mapRef = useRef<NaverMap | null>(null);
     const router = useRouter();
     const {
@@ -151,7 +154,7 @@ const index = () => {
                 },
                 (e: GeolocationPositionError) => {
                     setError(e.code);
-                    console.error(
+                    throw new Error(
                         `An error occured while retrieving coordinates.: ${e.message}`,
                     );
                 },
@@ -324,7 +327,9 @@ const index = () => {
                         }
                     },
                 )
-                .catch((e) => console.log(e));
+                .catch((e) => {
+                    throw new Error(`An error occured while fetching data.`);
+                });
         }
     }, [coords.client]);
 
@@ -461,12 +466,54 @@ const index = () => {
                             </Components.Map.RefreshButton>
                         </Components.Map.RefreshButtonContainer>
                     )}
+                    {menuExpanded && (
+                        <Components.Map.MenuContainer>
+                            <Components.Map.MenuItemContainer>
+                                <Components.Map.MenuItem
+                                    onClick={() =>
+                                        router.push(
+                                            process.env
+                                                .NEXT_PUBLIC_SERVICE_FAQ_URL ||
+                                                "",
+                                        )
+                                    }
+                                >
+                                    자주 묻는 질문
+                                </Components.Map.MenuItem>
+                            </Components.Map.MenuItemContainer>
+                            <Components.Map.MenuItemContainer>
+                                <Components.Map.MenuItem
+                                    onClick={() =>
+                                        router.push(
+                                            process.env
+                                                .NEXT_PUBLIC_SERVICE_DOCUMENT_URL ||
+                                                "",
+                                        )
+                                    }
+                                >
+                                    개발자들
+                                </Components.Map.MenuItem>
+                            </Components.Map.MenuItemContainer>
+                        </Components.Map.MenuContainer>
+                    )}
                     {mount && (
-                        <Components.Map.CurrentLocationButton
-                            onClick={() => panToCenter()}
-                        >
-                            <LocationIcon width={24} />
-                        </Components.Map.CurrentLocationButton>
+                        <>
+                            <Components.Map.CurrentLocationButton
+                                onClick={() => panToCenter()}
+                            >
+                                <LocationIcon width={24} />
+                            </Components.Map.CurrentLocationButton>
+                            <Components.Map.MenuButton
+                                $expanded={menuExpanded}
+                                onClick={() => setMenuExpanded((prev) => !prev)}
+                            >
+                                {menuExpanded ? (
+                                    <CloseIcon width={24} />
+                                ) : (
+                                    <MenuIcon width={24} />
+                                )}
+                            </Components.Map.MenuButton>
+                        </>
                     )}
                 </Components.Map.Container>
             </>
