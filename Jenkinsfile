@@ -18,18 +18,5 @@ pipeline {
                 sh "pwd"
             }
         }
-
-        stage("Build - Development") {
-            steps {
-                // git(
-                //     url: "git remote origin",
-                //     crententialsId: "",
-                //     branch: "develop"
-                // )
-
-                // sh "yarn install"
-                // sh "yarn build"
-            }
-        }
     }
 }
