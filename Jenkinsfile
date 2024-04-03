@@ -1,15 +1,15 @@
 pipeline {
     agent any
-    // tools {
-    //     nodejs ""
-    // }
+    tools {
+        nodejs "16.20.2"
+    }
 
     stages {
         stage("Build") {
             steps {
                 // git(
                 //     url: "git remote origin",
-                //     cretentialsId: "",
+                //     cre1tentialsId: "",
                 //     branch: "main"
                 // )
 
