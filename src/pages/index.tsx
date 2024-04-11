@@ -17,6 +17,7 @@ import DotPulseLoader from "@/components/common/DotPulseLoader";
 import { useVoucherInfQuery } from "@/hooks/queries/infquery/useVoucherList";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { userAgent } from "next/server";
 
 const apiKey = process.env.NEXT_PUBLIC_NAVER_MAP_APIKEY;
 
@@ -136,7 +137,10 @@ const index = () => {
     useEffect(() => {
         setLoading(true);
 
-        if (window.navigator.geolocation) {
+        if (
+            window.navigator.geolocation &&
+            !navigator.userAgent.toString().includes("webview")
+        ) {
             window.navigator.geolocation.getCurrentPosition(
                 (c) => {
                     setCoords({
@@ -159,6 +163,28 @@ const index = () => {
                     );
                 },
             );
+        }
+
+        if (navigator.userAgent.toString().includes("webview")) {
+            //eslint-disable-next-line
+            //@ts-ignore
+            LocationChannel.postMessage("getLocation");
+            //eslint-disable-next-line
+            //@ts-ignore
+            window.getLocation = (lat, lon) => {
+                setCoords({
+                    ...coords,
+                    init: {
+                        lat: lat,
+                        lng: lon,
+                    },
+                    client: {
+                        lat: lat,
+                        lng: lon,
+                    },
+                });
+                setLoading(false);
+            };
         }
         return () => {
             mapRef.current?.destroy();
@@ -183,7 +209,11 @@ const index = () => {
                     <svg style="flex-shrink;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M7 21h-4v-11h4v11zm7-11h-4v11h4v-11zm7 0h-4v11h4v-11zm2 12h-22v2h22v-2zm-23-13h24l-12-9-12 9z"/></svg>
                     ${selected.bank === "NH" ? "농협은행 사용 가능" : ``}
                     ${selected.bank === "GJ" ? "광주은행 사용 가능" : ``}
-                    ${selected.bank === "NH/GJ" ? "농협은행/광주은행 사용 가능" : ``}
+                    ${
+                        selected.bank === "NH/GJ"
+                            ? "농협은행/광주은행 사용 가능"
+                            : ``
+                    }
                 </span>`
                         : ``
                 }
@@ -248,7 +278,9 @@ const index = () => {
                                 );
                             })
                             .join("")}
-                        <li class="count">${overlapPlaces.length}개의 가맹점이 있습니다.</li>
+                        <li class="count">${
+                            overlapPlaces.length
+                        }개의 가맹점이 있습니다.</li>
                     </ul>
                 </div>
                 <span class="tail"></span>`,
