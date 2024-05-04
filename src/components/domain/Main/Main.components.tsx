@@ -132,7 +132,7 @@ export const Components = {
             outline: none;
             background-color: ${({ theme }) => theme.white};
             box-shadow: 0px 3px 15px -2px rgba(0, 0, 0, 0.1);
-            z-index: 9999;
+            z-index: 99;
             & svg path {
                 fill: ${({ theme }) => theme.black};
             }

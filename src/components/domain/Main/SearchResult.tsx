@@ -131,7 +131,7 @@ const VoucherListContainer = styled.ul`
     gap: 20px;
     width: 100%;
     min-height: 50px;
-    max-height: 500px;
+    max-height: 300px;
     padding: 20px 0;
     border-radius: 10px;
     background-color: ${({ theme }) => theme.white};
@@ -140,6 +140,9 @@ const VoucherListContainer = styled.ul`
     -ms-overflow-style: none;
     scrollbar-width: none;
     z-index: 99;
+    @media screen and (min-width: 768px) {
+        max-height: 500px;
+    }
 `;
 
 const CloseButton = styled.button`
