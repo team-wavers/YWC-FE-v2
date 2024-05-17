@@ -18,6 +18,7 @@ import { useVoucherInfQuery } from "@/hooks/queries/infquery/useVoucherList";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { userAgent } from "next/server";
+import getZoomDistance from "@/utils/zoomDistance";
 
 const apiKey = process.env.NEXT_PUBLIC_NAVER_MAP_APIKEY;
 
@@ -35,6 +36,8 @@ const index = () => {
         IVoucher[]
     > | null>(null); // 겹치는 마커 (마커 표시용)
     const [isCenterChanged, setIsCenterChanged] = useState<boolean>(false);
+    // const [isDragging, setIsDragging] = useState<boolean>(false);
+    const [distance, setDistance] = useState<number>(700);
     const [selected, setSelected] = useState<IVoucher | null>(null);
     const [overlapPlaces, setOverlapPlaces] = useState<IVoucher[] | null>(null); //겹치는 장소 (오버레이 표시용)
     const [searchKeyword, setSearchKeyword] = useState<string>("");
@@ -66,6 +69,11 @@ const index = () => {
             // 이벤트 최적화를 위한 center_changed 변경 -> touchend 및 mouseup event 사용
             mapRef.current.addListener("touchend", coordChangeHandler);
             mapRef.current.addListener("mouseup", coordChangeHandler);
+            mapRef.current.addListener("zoom_changed", (zoomLevel) =>
+                setDistance(getZoomDistance(zoomLevel)),
+            );
+            // mapRef.current.addListener("dragstart", () => setIsDragging(true));
+            // mapRef.current.addListener("dragend", () => setIsDragging(false));
 
             setMount(true);
         }
@@ -348,6 +356,7 @@ const index = () => {
                 .getVouchersByCoord({
                     lat: coords.client?.lat,
                     lng: coords.client?.lng,
+                    distance: distance,
                 })
                 .then(
                     ({ data }: { data: GeneralResponse<Array<IVoucher>> }) => {
@@ -446,6 +455,7 @@ const index = () => {
                 <Components.Map.Container id="map">
                     {mount &&
                         mapRef &&
+                        // !isDragging &&
                         markers
                             ?.filter(
                                 (vouchers) =>
@@ -470,6 +480,7 @@ const index = () => {
                             })}
                     {mount &&
                         mapRef &&
+                        // !isDragging &&
                         overlapMarkers &&
                         overlapMarkers.map((marker) => {
                             return (
