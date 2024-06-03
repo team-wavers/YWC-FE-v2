@@ -58,6 +58,9 @@ export default class MyDocument extends Document {
                     <meta content="./thumbnail.png" property="og:image" />
                     <meta content="1200" property="og:image:width" />
                     <meta content="630" property="og:image:height" />
+                    <meta httpEquiv="Expires" content="-1" />
+                    <meta httpEquiv="Pragma" content="no-cache" />
+                    <meta httpEquiv="Cache-Control" content="no-cache" />
                 </Head>
                 <body>
                     <Main />
