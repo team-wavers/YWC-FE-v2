@@ -398,7 +398,7 @@ const index = () => {
             </Components.Error.Container>
         );
     }
-    if (loading && error === null) {
+    if (loading && !error) {
         return (
             <Components.Loader.Container>
                 <DotPulseLoader color="#3498db" />
