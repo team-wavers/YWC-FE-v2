@@ -408,7 +408,7 @@ const index = () => {
         return (
             <>
                 <Script
-                    strategy="beforeInteractive"
+                    strategy="afterInteractive"
                     type="text/javascript"
                     src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${apiKey}&callback=initMap`}
                     onReady={initializeMap}
