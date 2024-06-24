@@ -44,8 +44,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 }
                 gtag('js', new Date());
 
-                gtag('config', '${gtag}');
-                console.log("gtag script injected")`}
+                gtag('config', '${gtag}');`}
             </Script>
         </>
     );
