@@ -17,7 +17,6 @@ import DotPulseLoader from "@/components/common/DotPulseLoader";
 import { useVoucherInfQuery } from "@/hooks/queries/infquery/useVoucherList";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { userAgent } from "next/server";
 import getZoomDistance from "@/utils/zoomDistance";
 
 const apiKey = process.env.NEXT_PUBLIC_NAVER_MAP_APIKEY;
@@ -368,7 +367,7 @@ const index = () => {
                         }
                     },
                 )
-                .catch((e) => {
+                .catch(() => {
                     throw new Error(`An error occured while fetching data.`);
                 });
         }
@@ -408,9 +407,8 @@ const index = () => {
         return (
             <>
                 <Script
-                    strategy="afterInteractive"
                     type="text/javascript"
-                    src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${apiKey}&callback=initMap`}
+                    src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${apiKey}`}
                     onReady={initializeMap}
                 />
 
@@ -452,6 +450,7 @@ const index = () => {
                         )}
                     </Components.Search.Container>
                 )}
+
                 <Components.Map.Container id="map">
                     {mount &&
                         mapRef &&
@@ -499,66 +498,63 @@ const index = () => {
                                 />
                             );
                         })}
-                    {mount && isCenterChanged && (
-                        <Components.Map.RefreshButtonContainer>
-                            <Components.Map.RefreshButton
-                                onClick={refreshHandler}
-                            >
-                                <RefreshIcon width={24} height={24} />
-                                장소 재검색
-                            </Components.Map.RefreshButton>
-                        </Components.Map.RefreshButtonContainer>
-                    )}
-                    {menuExpanded && (
-                        <Components.Map.MenuContainer>
-                            <Components.Map.MenuItemContainer>
-                                <Components.Map.MenuItem
-                                    onClick={() =>
-                                        router.push(
-                                            process.env
-                                                .NEXT_PUBLIC_SERVICE_FAQ_URL ||
-                                                "",
-                                        )
-                                    }
-                                >
-                                    자주 묻는 질문
-                                </Components.Map.MenuItem>
-                            </Components.Map.MenuItemContainer>
-                            <Components.Map.MenuItemContainer>
-                                <Components.Map.MenuItem
-                                    onClick={() =>
-                                        router.push(
-                                            process.env
-                                                .NEXT_PUBLIC_SERVICE_DOCUMENT_URL ||
-                                                "",
-                                        )
-                                    }
-                                >
-                                    개발자들
-                                </Components.Map.MenuItem>
-                            </Components.Map.MenuItemContainer>
-                        </Components.Map.MenuContainer>
-                    )}
-                    {mount && (
-                        <>
-                            <Components.Map.CurrentLocationButton
-                                onClick={() => panToCenter()}
-                            >
-                                <LocationIcon width={24} />
-                            </Components.Map.CurrentLocationButton>
-                            <Components.Map.MenuButton
-                                $expanded={menuExpanded}
-                                onClick={() => setMenuExpanded((prev) => !prev)}
-                            >
-                                {menuExpanded ? (
-                                    <CloseIcon width={24} />
-                                ) : (
-                                    <MenuIcon width={24} />
-                                )}
-                            </Components.Map.MenuButton>
-                        </>
-                    )}
                 </Components.Map.Container>
+                {mount && isCenterChanged && (
+                    <Components.Map.RefreshButtonContainer>
+                        <Components.Map.RefreshButton onClick={refreshHandler}>
+                            <RefreshIcon width={24} height={24} />
+                            장소 재검색
+                        </Components.Map.RefreshButton>
+                    </Components.Map.RefreshButtonContainer>
+                )}
+                {menuExpanded && (
+                    <Components.Map.MenuContainer>
+                        <Components.Map.MenuItemContainer>
+                            <Components.Map.MenuItem
+                                onClick={() =>
+                                    router.push(
+                                        process.env
+                                            .NEXT_PUBLIC_SERVICE_FAQ_URL || "",
+                                    )
+                                }
+                            >
+                                자주 묻는 질문
+                            </Components.Map.MenuItem>
+                        </Components.Map.MenuItemContainer>
+                        <Components.Map.MenuItemContainer>
+                            <Components.Map.MenuItem
+                                onClick={() =>
+                                    router.push(
+                                        process.env
+                                            .NEXT_PUBLIC_SERVICE_DOCUMENT_URL ||
+                                            "",
+                                    )
+                                }
+                            >
+                                개발자들
+                            </Components.Map.MenuItem>
+                        </Components.Map.MenuItemContainer>
+                    </Components.Map.MenuContainer>
+                )}
+                {mount && (
+                    <>
+                        <Components.Map.CurrentLocationButton
+                            onClick={() => panToCenter()}
+                        >
+                            <LocationIcon width={24} />
+                        </Components.Map.CurrentLocationButton>
+                        <Components.Map.MenuButton
+                            $expanded={menuExpanded}
+                            onClick={() => setMenuExpanded((prev) => !prev)}
+                        >
+                            {menuExpanded ? (
+                                <CloseIcon width={24} />
+                            ) : (
+                                <MenuIcon width={24} />
+                            )}
+                        </Components.Map.MenuButton>
+                    </>
+                )}
             </>
         );
     }
