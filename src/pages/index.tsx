@@ -17,6 +17,7 @@ import DotPulseLoader from "@/components/common/DotPulseLoader";
 import { useVoucherInfQuery } from "@/hooks/queries/infquery/useVoucherList";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import getZoomDistance from "@/utils/zoomDistance";
 
 const apiKey = process.env.NEXT_PUBLIC_NAVER_MAP_APIKEY;
 
@@ -34,6 +35,8 @@ const index = () => {
         IVoucher[]
     > | null>(null); // 겹치는 마커 (마커 표시용)
     const [isCenterChanged, setIsCenterChanged] = useState<boolean>(false);
+    // const [isDragging, setIsDragging] = useState<boolean>(false);
+    const [distance, setDistance] = useState<number>(700);
     const [selected, setSelected] = useState<IVoucher | null>(null);
     const [overlapPlaces, setOverlapPlaces] = useState<IVoucher[] | null>(null); //겹치는 장소 (오버레이 표시용)
     const [searchKeyword, setSearchKeyword] = useState<string>("");
@@ -65,6 +68,11 @@ const index = () => {
             // 이벤트 최적화를 위한 center_changed 변경 -> touchend 및 mouseup event 사용
             mapRef.current.addListener("touchend", coordChangeHandler);
             mapRef.current.addListener("mouseup", coordChangeHandler);
+            mapRef.current.addListener("zoom_changed", (zoomLevel) =>
+                setDistance(getZoomDistance(zoomLevel)),
+            );
+            // mapRef.current.addListener("dragstart", () => setIsDragging(true));
+            // mapRef.current.addListener("dragend", () => setIsDragging(false));
 
             setMount(true);
         }
@@ -136,7 +144,10 @@ const index = () => {
     useEffect(() => {
         setLoading(true);
 
-        if (window.navigator.geolocation) {
+        if (
+            window.navigator.geolocation &&
+            !navigator.userAgent.toString().includes("webview")
+        ) {
             window.navigator.geolocation.getCurrentPosition(
                 (c) => {
                     setCoords({
@@ -159,6 +170,28 @@ const index = () => {
                     );
                 },
             );
+        }
+
+        if (navigator.userAgent.toString().includes("webview")) {
+            //eslint-disable-next-line
+            //@ts-ignore
+            LocationChannel.postMessage("getLocation");
+            //eslint-disable-next-line
+            //@ts-ignore
+            window.getLocation = (lat, lon) => {
+                setCoords({
+                    ...coords,
+                    init: {
+                        lat: lat,
+                        lng: lon,
+                    },
+                    client: {
+                        lat: lat,
+                        lng: lon,
+                    },
+                });
+                setLoading(false);
+            };
         }
         return () => {
             mapRef.current?.destroy();
@@ -183,7 +216,11 @@ const index = () => {
                     <svg style="flex-shrink;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M7 21h-4v-11h4v11zm7-11h-4v11h4v-11zm7 0h-4v11h4v-11zm2 12h-22v2h22v-2zm-23-13h24l-12-9-12 9z"/></svg>
                     ${selected.bank === "NH" ? "농협은행 사용 가능" : ``}
                     ${selected.bank === "GJ" ? "광주은행 사용 가능" : ``}
-                    ${selected.bank === "NH/GJ" ? "농협은행/광주은행 사용 가능" : ``}
+                    ${
+                        selected.bank === "NH/GJ"
+                            ? "농협은행/광주은행 사용 가능"
+                            : ``
+                    }
                 </span>`
                         : ``
                 }
@@ -248,7 +285,9 @@ const index = () => {
                                 );
                             })
                             .join("")}
-                        <li class="count">${overlapPlaces.length}개의 가맹점이 있습니다.</li>
+                        <li class="count">${
+                            overlapPlaces.length
+                        }개의 가맹점이 있습니다.</li>
                     </ul>
                 </div>
                 <span class="tail"></span>`,
@@ -316,6 +355,7 @@ const index = () => {
                 .getVouchersByCoord({
                     lat: coords.client?.lat,
                     lng: coords.client?.lng,
+                    distance: distance,
                 })
                 .then(
                     ({ data }: { data: GeneralResponse<Array<IVoucher>> }) => {
@@ -327,7 +367,7 @@ const index = () => {
                         }
                     },
                 )
-                .catch((e) => {
+                .catch(() => {
                     throw new Error(`An error occured while fetching data.`);
                 });
         }
@@ -357,7 +397,7 @@ const index = () => {
             </Components.Error.Container>
         );
     }
-    if (loading && error === null) {
+    if (loading && !error) {
         return (
             <Components.Loader.Container>
                 <DotPulseLoader color="#3498db" />
@@ -367,9 +407,8 @@ const index = () => {
         return (
             <>
                 <Script
-                    strategy="beforeInteractive"
                     type="text/javascript"
-                    src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${apiKey}&callback=initMap`}
+                    src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${apiKey}`}
                     onReady={initializeMap}
                 />
 
@@ -411,9 +450,11 @@ const index = () => {
                         )}
                     </Components.Search.Container>
                 )}
+
                 <Components.Map.Container id="map">
                     {mount &&
                         mapRef &&
+                        // !isDragging &&
                         markers
                             ?.filter(
                                 (vouchers) =>
@@ -438,6 +479,7 @@ const index = () => {
                             })}
                     {mount &&
                         mapRef &&
+                        // !isDragging &&
                         overlapMarkers &&
                         overlapMarkers.map((marker) => {
                             return (
@@ -456,66 +498,63 @@ const index = () => {
                                 />
                             );
                         })}
-                    {mount && isCenterChanged && (
-                        <Components.Map.RefreshButtonContainer>
-                            <Components.Map.RefreshButton
-                                onClick={refreshHandler}
-                            >
-                                <RefreshIcon width={24} height={24} />
-                                장소 재검색
-                            </Components.Map.RefreshButton>
-                        </Components.Map.RefreshButtonContainer>
-                    )}
-                    {menuExpanded && (
-                        <Components.Map.MenuContainer>
-                            <Components.Map.MenuItemContainer>
-                                <Components.Map.MenuItem
-                                    onClick={() =>
-                                        router.push(
-                                            process.env
-                                                .NEXT_PUBLIC_SERVICE_FAQ_URL ||
-                                                "",
-                                        )
-                                    }
-                                >
-                                    자주 묻는 질문
-                                </Components.Map.MenuItem>
-                            </Components.Map.MenuItemContainer>
-                            <Components.Map.MenuItemContainer>
-                                <Components.Map.MenuItem
-                                    onClick={() =>
-                                        router.push(
-                                            process.env
-                                                .NEXT_PUBLIC_SERVICE_DOCUMENT_URL ||
-                                                "",
-                                        )
-                                    }
-                                >
-                                    개발자들
-                                </Components.Map.MenuItem>
-                            </Components.Map.MenuItemContainer>
-                        </Components.Map.MenuContainer>
-                    )}
-                    {mount && (
-                        <>
-                            <Components.Map.CurrentLocationButton
-                                onClick={() => panToCenter()}
-                            >
-                                <LocationIcon width={24} />
-                            </Components.Map.CurrentLocationButton>
-                            <Components.Map.MenuButton
-                                $expanded={menuExpanded}
-                                onClick={() => setMenuExpanded((prev) => !prev)}
-                            >
-                                {menuExpanded ? (
-                                    <CloseIcon width={24} />
-                                ) : (
-                                    <MenuIcon width={24} />
-                                )}
-                            </Components.Map.MenuButton>
-                        </>
-                    )}
                 </Components.Map.Container>
+                {mount && isCenterChanged && (
+                    <Components.Map.RefreshButtonContainer>
+                        <Components.Map.RefreshButton onClick={refreshHandler}>
+                            <RefreshIcon width={24} height={24} />
+                            장소 재검색
+                        </Components.Map.RefreshButton>
+                    </Components.Map.RefreshButtonContainer>
+                )}
+                {menuExpanded && (
+                    <Components.Map.MenuContainer>
+                        <Components.Map.MenuItemContainer>
+                            <Components.Map.MenuItem
+                                onClick={() =>
+                                    router.push(
+                                        process.env
+                                            .NEXT_PUBLIC_SERVICE_FAQ_URL || "",
+                                    )
+                                }
+                            >
+                                자주 묻는 질문
+                            </Components.Map.MenuItem>
+                        </Components.Map.MenuItemContainer>
+                        <Components.Map.MenuItemContainer>
+                            <Components.Map.MenuItem
+                                onClick={() =>
+                                    router.push(
+                                        process.env
+                                            .NEXT_PUBLIC_SERVICE_DOCUMENT_URL ||
+                                            "",
+                                    )
+                                }
+                            >
+                                개발자들
+                            </Components.Map.MenuItem>
+                        </Components.Map.MenuItemContainer>
+                    </Components.Map.MenuContainer>
+                )}
+                {mount && (
+                    <>
+                        <Components.Map.CurrentLocationButton
+                            onClick={() => panToCenter()}
+                        >
+                            <LocationIcon width={24} />
+                        </Components.Map.CurrentLocationButton>
+                        <Components.Map.MenuButton
+                            $expanded={menuExpanded}
+                            onClick={() => setMenuExpanded((prev) => !prev)}
+                        >
+                            {menuExpanded ? (
+                                <CloseIcon width={24} />
+                            ) : (
+                                <MenuIcon width={24} />
+                            )}
+                        </Components.Map.MenuButton>
+                    </>
+                )}
             </>
         );
     }
